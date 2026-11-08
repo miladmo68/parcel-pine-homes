@@ -1,0 +1,8 @@
+[
+  {"id":"pp-101","title":"Cedar Courtyard House","neighbourhood":"Leslieville","address":"18 Coady Avenue, Toronto","price":1685000,"beds":3,"baths":3,"area":2140,"kind":"House","featured":true,"availableSlots":["Mon, Nov 9 · 5:30 PM","Tue, Nov 10 · 12:00 PM","Wed, Nov 11 · 6:00 PM"]},
+  {"id":"pp-102","title":"Gallery Loft on Sterling","neighbourhood":"Junction Triangle","address":"158 Sterling Road, Toronto","price":1098000,"beds":2,"baths":2,"area":1320,"kind":"Loft","featured":true,"availableSlots":["Mon, Nov 9 · 1:30 PM","Thu, Nov 12 · 5:00 PM"]},
+  {"id":"pp-103","title":"Ravine Edge Townhome","neighbourhood":"Wychwood","address":"44 Alcina Avenue, Toronto","price":1395000,"beds":3,"baths":2,"area":1810,"kind":"Townhome","featured":false,"availableSlots":["Tue, Nov 10 · 4:30 PM","Fri, Nov 13 · 11:00 AM"]},
+  {"id":"pp-104","title":"Harbour Window Condo","neighbourhood":"St. Lawrence","address":"71 The Esplanade, Toronto","price":899000,"beds":2,"baths":2,"area":1045,"kind":"Condo","featured":false,"availableSlots":["Mon, Nov 9 · 6:00 PM","Wed, Nov 11 · 12:30 PM","Sat, Nov 14 · 10:00 AM"]},
+  {"id":"pp-105","title":"Garden Flat on Roxton","neighbourhood":"Trinity Bellwoods","address":"204 Roxton Road, Toronto","price":775000,"beds":1,"baths":1,"area":805,"kind":"Condo","featured":true,"availableSlots":["Tue, Nov 10 · 5:30 PM","Sat, Nov 14 · 1:00 PM"]},
+  {"id":"pp-106","title":"High Park Veranda House","neighbourhood":"High Park North","address":"37 Glenlake Avenue, Toronto","price":2245000,"beds":4,"baths":4,"area":2860,"kind":"House","featured":false,"availableSlots":["Wed, Nov 11 · 4:00 PM","Thu, Nov 12 · 11:30 AM"]}
+]
