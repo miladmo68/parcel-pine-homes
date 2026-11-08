@@ -6,6 +6,7 @@ import { PropertyCard } from "./components/PropertyCard";
 import { CompareTray } from "./components/CompareTray";
 import { SavedDrawer } from "./components/SavedDrawer";
 import { PropertyDetail } from "./components/PropertyDetail";
+import { EditorialSections } from "./components/EditorialSections";
 import { neighbourhoods } from "./data/properties";
 import { defaultFilters, type Property, type PropertyFilters } from "./domain/types";
 import { propertyRepository } from "./repositories/staticPropertyRepository";
@@ -36,6 +37,17 @@ export function App() {
     }, 160);
     return () => window.clearTimeout(timer);
   }, [filters, selectedId]);
+
+  useEffect(() => {
+    const focusSearch = (event: KeyboardEvent) => {
+      if (event.key === "/" && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) {
+        event.preventDefault();
+        document.querySelector<HTMLInputElement>(".search-field input")?.focus();
+      }
+    };
+    window.addEventListener("keydown", focusSearch);
+    return () => window.removeEventListener("keydown", focusSearch);
+  }, []);
 
   const selected = useMemo(() => results.find((property) => property.id === selectedId) ?? null, [results, selectedId]);
   const openSavedHome = (id: string) => { setSelectedId(id); setSavedOpen(false); document.getElementById("discover")?.scrollIntoView(); };
@@ -76,6 +88,7 @@ export function App() {
           </div>
           <aside className="map-panel"><MapCanvas properties={results} selectedId={selectedId} savedIds={saved.ids} onSelect={setSelectedId} /></aside>
         </section>
+        <EditorialSections />
       </main>
       <CompareTray ids={compare.ids} expanded={compareOpen} onExpand={() => setCompareOpen((value) => !value)} onRemove={compare.remove} onClear={compare.clear} />
       <SavedDrawer open={savedOpen} ids={saved.ids} onClose={() => setSavedOpen(false)} onOpenHome={openSavedHome} onRemove={saved.remove} />
