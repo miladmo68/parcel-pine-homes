@@ -5,10 +5,12 @@ import { MapCanvas } from "./components/MapCanvas";
 import { PropertyCard } from "./components/PropertyCard";
 import { CompareTray } from "./components/CompareTray";
 import { SavedDrawer } from "./components/SavedDrawer";
+import { PropertyDetail } from "./components/PropertyDetail";
 import { neighbourhoods } from "./data/properties";
 import { defaultFilters, type Property, type PropertyFilters } from "./domain/types";
 import { propertyRepository } from "./repositories/staticPropertyRepository";
 import { usePersistentIds } from "./hooks/usePersistentIds";
+import { useViewingPlan } from "./hooks/useViewingPlan";
 
 type ViewMode = "split" | "list" | "map";
 
@@ -18,6 +20,7 @@ export function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const saved = usePersistentIds("parcel-pine:saved");
   const compare = usePersistentIds("parcel-pine:compare");
+  const viewingPlan = useViewingPlan();
   const [view, setView] = useState<ViewMode>("split");
   const [loading, setLoading] = useState(true);
   const [savedOpen, setSavedOpen] = useState(false);
@@ -76,6 +79,7 @@ export function App() {
       </main>
       <CompareTray ids={compare.ids} expanded={compareOpen} onExpand={() => setCompareOpen((value) => !value)} onRemove={compare.remove} onClear={compare.clear} />
       <SavedDrawer open={savedOpen} ids={saved.ids} onClose={() => setSavedOpen(false)} onOpenHome={openSavedHome} onRemove={saved.remove} />
+      <PropertyDetail property={selected} saved={selected ? saved.ids.includes(selected.id) : false} onSave={() => selected && saved.toggle(selected.id)} onClose={() => setSelectedId(null)} onCreated={viewingPlan.add} />
       <footer><p>Parcel &amp; Pine</p><p>Illustrative listings and viewing previews for a portfolio experience.</p><p>Toronto · 2026</p></footer>
     </div>
   );
