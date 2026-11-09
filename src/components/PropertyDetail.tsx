@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Property, ViewingRequest } from "../domain/types";
 import { money } from "../lib/format";
 import { CheckIcon, CloseIcon, HeartIcon } from "./Icons";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 
 type FormState = { name: string; email: string; slot: string; note: string };
 const emptyForm: FormState = { name: "", email: "", slot: "", note: "" };
@@ -13,17 +14,13 @@ export function PropertyDetail({ property, saved, onSave, onClose, onCreated }: 
   onClose: () => void;
   onCreated: (request: ViewingRequest) => void;
 }) {
+  const dialogRef = useDialogA11y(Boolean(property), onClose);
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmed, setConfirmed] = useState<ViewingRequest | null>(null);
 
   useEffect(() => { setFormOpen(false); setForm(emptyForm); setErrors({}); setConfirmed(null); }, [property?.id]);
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") onClose(); };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [onClose]);
   if (!property) return null;
 
   const submit = (event: React.FormEvent) => {
@@ -39,7 +36,7 @@ export function PropertyDetail({ property, saved, onSave, onClose, onCreated }: 
   };
 
   return <div className="detail-layer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-    <section className="property-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <section ref={dialogRef} className="property-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
       <button className="detail-close" onClick={onClose} aria-label="Close property details"><CloseIcon /></button>
       <div className="detail-photo"><img src={property.image} alt={property.imageAlt}/><p>{property.kind} · {property.neighbourhood}</p></div>
       <div className="detail-copy">

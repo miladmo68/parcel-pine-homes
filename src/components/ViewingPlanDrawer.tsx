@@ -1,7 +1,21 @@
 import { properties } from "../data/properties";
 import type { ViewingRequest } from "../domain/types";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 import { CalendarIcon, CloseIcon } from "./Icons";
-export function ViewingPlanDrawer({ open, requests, onClose, onOpenHome, onRemove, onClear }: { open: boolean; requests: ViewingRequest[]; onClose: () => void; onOpenHome: (id: string) => void; onRemove: (id: string) => void; onClear: () => void; }) {
+
+export function ViewingPlanDrawer({ open, requests, onClose, onOpenHome, onRemove, onClear }: {
+  open: boolean; requests: ViewingRequest[]; onClose: () => void; onOpenHome: (id: string) => void; onRemove: (id: string) => void; onClear: () => void;
+}) {
+  const dialogRef = useDialogA11y(open, onClose);
   if (!open) return null;
-  return <div className="drawer-layer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><aside className="saved-drawer plan-drawer" role="dialog" aria-modal="true" aria-labelledby="plan-title"><div className="drawer-heading"><div><p className="eyebrow">Private planning</p><h2 id="plan-title">Viewing plan</h2></div><button onClick={onClose} aria-label="Close viewing plan"><CloseIcon/></button></div>{requests.length ? <><div className="plan-list">{requests.map((request, index) => { const property = properties.find((item) => item.id === request.propertyId); return <article key={request.id}><div className="plan-number">{String(index + 1).padStart(2, "0")}</div><button className="plan-home" onClick={() => onOpenHome(request.propertyId)}><span>{request.slot}</span><strong>{property?.title ?? "Home"}</strong><small>{property?.neighbourhood}</small></button><button className="plan-remove" onClick={() => onRemove(request.id)}>Remove</button></article>; })}</div><button className="clear-plan" onClick={onClear}>Clear viewing plan</button></> : <div className="drawer-empty"><CalendarIcon/><h3>No viewings planned yet.</h3><p>Open a home and choose “Plan a viewing” to create a browser-local preview.</p></div>}<p className="drawer-note">This planning tool does not send a booking, contact an agent, or reserve a time.</p></aside></div>;
+  return <div className="drawer-layer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <aside ref={dialogRef} className="saved-drawer plan-drawer" role="dialog" aria-modal="true" aria-labelledby="plan-title">
+      <div className="drawer-heading"><div><p className="eyebrow">Private planning</p><h2 id="plan-title">Viewing plan</h2></div><button onClick={onClose} aria-label="Close viewing plan"><CloseIcon/></button></div>
+      {requests.length ? <><div className="plan-list">{requests.map((request, index) => {
+        const property = properties.find((item) => item.id === request.propertyId);
+        return <article key={request.id}><div className="plan-number">{String(index + 1).padStart(2, "0")}</div><button className="plan-home" onClick={() => onOpenHome(request.propertyId)}><span>{request.slot}</span><strong>{property?.title ?? "Home"}</strong><small>{property?.neighbourhood}</small></button><button className="plan-remove" onClick={() => onRemove(request.id)}>Remove</button></article>;
+      })}</div><button className="clear-plan" onClick={onClear}>Clear viewing plan</button></> : <div className="drawer-empty"><CalendarIcon/><h3>No viewings planned yet.</h3><p>Open a home and choose “Plan a viewing” to create a browser-local preview.</p></div>}
+      <p className="drawer-note">This planning tool does not send a booking, contact an agent, or reserve a time.</p>
+    </aside>
+  </div>;
 }
