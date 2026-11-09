@@ -1,6 +1,7 @@
 import { ZodError } from "zod";
 
 export function errorHandler(error, _request, response, _next) {
+  void _next;
   if (error instanceof ZodError) {
     return response.status(422).json({ code: "VALIDATION_ERROR", message: "Please check the highlighted information.", issues: error.flatten() });
   }
