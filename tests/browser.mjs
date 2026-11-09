@@ -51,6 +51,7 @@ async function desktopJourney(browser) {
   await page.getByRole("button", { name: /Save search/ }).click();
   await page.getByRole("button", { name: /Clear all/ }).click();
   await page.getByRole("button", { name: /Restore saved/ }).click();
+  await page.getByRole("button", { name: /View Garden Flat/ }).waitFor();
   expect(await page.locator(".property-card").count() === 1, "Saved search did not restore the filtered result");
   await page.getByRole("button", { name: /Share search/ }).click();
   expect(page.url().includes("q=garden"), "Shareable filter state was not reflected in the URL");
