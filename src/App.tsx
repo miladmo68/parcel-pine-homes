@@ -104,7 +104,7 @@ export function App() {
               <div className="empty-state"><span>0</span><h3>No homes match that exact brief.</h3><p>Try a broader price range or remove one property type.</p><button onClick={() => setFilters(defaultFilters)}>Reset the search</button></div>
             )}
           </div>
-          <aside className="map-panel"><MapCanvas properties={results} selectedId={selectedId} savedIds={saved.ids} onSelect={setSelectedId} /></aside>
+          <aside className="map-panel">{view === "map" ? <button className="map-return" onClick={() => setView("split")}><GridIcon/> Return to split view</button> : null}<MapCanvas properties={results} selectedId={selectedId} savedIds={saved.ids} onSelect={setSelectedId} /></aside>
         </section>
         <EditorialSections />
       </main>

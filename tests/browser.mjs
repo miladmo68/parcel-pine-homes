@@ -35,7 +35,7 @@ async function desktopJourney(browser) {
   expect(await page.locator(".view-list").count() === 1, "List view did not activate");
   await page.getByRole("button", { name: "Map view" }).click();
   expect(await page.locator(".view-map").count() === 1, "Map view did not activate");
-  await page.getByRole("button", { name: "Split view" }).click();
+  await page.getByRole("button", { name: "Return to split view" }).click();
 
   await page.getByRole("button", { name: /Save Cedar Courtyard/ }).click();
   await page.getByRole("button", { name: /Save Gallery Loft/ }).click();
