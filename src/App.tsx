@@ -7,6 +7,7 @@ import { CompareTray } from "./components/CompareTray";
 import { SavedDrawer } from "./components/SavedDrawer";
 import { PropertyDetail } from "./components/PropertyDetail";
 import { EditorialSections } from "./components/EditorialSections";
+import { SearchActions } from "./components/SearchActions";
 import { neighbourhoods } from "./data/properties";
 import { defaultFilters, type Property, type PropertyFilters } from "./domain/types";
 import { propertyRepository } from "./repositories/staticPropertyRepository";
@@ -26,6 +27,7 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [savedOpen, setSavedOpen] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [actionNotice, setActionNotice] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -49,6 +51,12 @@ export function App() {
     return () => window.removeEventListener("keydown", focusSearch);
   }, []);
 
+  useEffect(() => {
+    if (!actionNotice) return;
+    const timer = window.setTimeout(() => setActionNotice(""), 2600);
+    return () => window.clearTimeout(timer);
+  }, [actionNotice]);
+
   const selected = useMemo(() => results.find((property) => property.id === selectedId) ?? null, [results, selectedId]);
   const openSavedHome = (id: string) => { setSelectedId(id); setSavedOpen(false); document.getElementById("discover")?.scrollIntoView(); };
 
@@ -69,6 +77,7 @@ export function App() {
         </section>
 
         <FilterBar filters={filters} neighbourhoods={neighbourhoods} resultCount={results.length} onChange={setFilters} onReset={() => setFilters(defaultFilters)} />
+        <SearchActions filters={filters} savedIds={saved.ids} notice={actionNotice} onNotice={setActionNotice} />
 
         <section className={`discovery-layout view-${view}`}>
           <div className="results-panel">
