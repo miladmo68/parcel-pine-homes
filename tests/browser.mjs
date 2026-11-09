@@ -79,6 +79,10 @@ async function desktopJourney(browser) {
   await page.getByRole("link", { name: "Collections" }).click();
   expect(await page.getByRole("heading", { name: /Search by the life/ }).isVisible(), "Collections anchor did not work");
   await page.getByRole("link", { name: /Parcel and Pine home/ }).click();
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "networkidle" });
+  await page.locator(".property-card").first().waitFor();
+  expect(await page.locator(".property-card").count() === 6, "Desktop capture must show the finished home collection");
   await waitForImages(page);
   await assertNoOverflow(page, "Desktop");
   await page.screenshot({ path: "public/screenshots/desktop.png", fullPage: true });
