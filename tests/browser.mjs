@@ -47,7 +47,7 @@ async function desktopJourney(browser) {
   await page.getByRole("button", { name: "Close comparison" }).click();
 
   await page.getByPlaceholder("Street, neighbourhood, or feature").fill("garden");
-  await page.getByRole("button", { name: "Condo" }).click();
+  await page.getByRole("button", { name: "Condo", exact: true }).click();
   await page.getByRole("button", { name: /Save search/ }).click();
   await page.getByRole("button", { name: /Clear all/ }).click();
   await page.getByRole("button", { name: /Restore saved/ }).click();
