@@ -7,8 +7,9 @@ export class DomainError extends Error {
 }
 
 export class PropertyService {
-  constructor(repository) {
+  constructor(repository, viewingRepository) {
     this.repository = repository;
+    this.viewingRepository = viewingRepository;
   }
 
   async discover(filters) {
@@ -27,13 +28,13 @@ export class PropertyService {
     if (!property.availableSlots.includes(payload.slot)) {
       throw new DomainError("That viewing time is no longer available", 409, "SLOT_UNAVAILABLE");
     }
+    if (await this.viewingRepository?.hasConflict(payload)) throw new DomainError("This preview is already in your plan", 409, "DUPLICATE_PREVIEW");
+    const record = this.viewingRepository ? await this.viewingRepository.create(payload) : { id: `preview-${payload.propertyId}-${Date.now()}`, ...payload, status: "preview", createdAt: new Date().toISOString() };
     return {
-      id: `preview-${payload.propertyId}-${Date.now()}`,
-      ...payload,
-      propertyTitle: property.title,
-      status: "preview",
-      createdAt: new Date().toISOString(),
+      ...record, propertyTitle: property.title,
       notice: "This portfolio experience stores a local preview only and does not contact a brokerage.",
     };
   }
+
+  async listViewingPreviews() { return this.viewingRepository?.list() ?? []; }
 }

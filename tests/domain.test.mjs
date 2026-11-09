@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { PropertyService } from "../server/services/propertyService.js";
 import { StaticJsonPropertyRepository } from "../server/repositories/staticJsonPropertyRepository.js";
+import { StaticJsonViewingRepository } from "../server/repositories/staticJsonViewingRepository.js";
 
-const service = new PropertyService(new StaticJsonPropertyRepository());
+const viewingRepository = new StaticJsonViewingRepository();
+const service = new PropertyService(new StaticJsonPropertyRepository(), viewingRepository);
 const defaults = { query: "", neighbourhood: undefined, kinds: [], minBeds: 0, maxPrice: 50000000 };
 
 test("discovery returns the complete curated inventory", async () => {
@@ -27,5 +29,7 @@ test("viewing preview accepts only a published availability slot", async () => {
   const preview = await service.previewViewing(payload);
   assert.equal(preview.status, "preview");
   assert.match(preview.notice, /does not contact/i);
+  assert.equal((await service.listViewingPreviews()).length, 1);
+  await assert.rejects(() => service.previewViewing(payload), (error) => error.code === "DUPLICATE_PREVIEW");
   await assert.rejects(() => service.previewViewing({ ...payload, slot: "Friday at midnight" }), (error) => error.code === "SLOT_UNAVAILABLE");
 });
