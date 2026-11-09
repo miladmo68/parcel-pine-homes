@@ -7,5 +7,7 @@ export function useViewingPlan() {
   });
   useEffect(() => { window.localStorage.setItem("parcel-pine:viewings", JSON.stringify(requests)); }, [requests]);
   const add = (request: ViewingRequest) => setRequests((current) => [request, ...current.filter((item) => item.propertyId !== request.propertyId)]);
-  return { requests, add };
+  const remove = (id: string) => setRequests((current) => current.filter((item) => item.id !== id));
+  const clear = () => setRequests([]);
+  return { requests, add, remove, clear };
 }
