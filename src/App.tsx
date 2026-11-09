@@ -14,11 +14,12 @@ import { defaultFilters, type Property, type PropertyFilters } from "./domain/ty
 import { propertyRepository } from "./repositories/staticPropertyRepository";
 import { usePersistentIds } from "./hooks/usePersistentIds";
 import { useViewingPlan } from "./hooks/useViewingPlan";
+import { parseFilters, serializeFilters } from "./lib/shortlist";
 
 type ViewMode = "split" | "list" | "map";
 
 export function App() {
-  const [filters, setFilters] = useState<PropertyFilters>(defaultFilters);
+  const [filters, setFilters] = useState<PropertyFilters>(() => typeof window === "undefined" ? defaultFilters : parseFilters(new URLSearchParams(window.location.search)));
   const [results, setResults] = useState<Property[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const saved = usePersistentIds("parcel-pine:saved");
@@ -59,6 +60,12 @@ export function App() {
     return () => window.clearTimeout(timer);
   }, [actionNotice]);
 
+  useEffect(() => {
+    const query = serializeFilters(filters);
+    const next = query ? `${window.location.pathname}?${query}${window.location.hash}` : `${window.location.pathname}${window.location.hash}`;
+    window.history.replaceState({}, "", next);
+  }, [filters]);
+
   const selected = useMemo(() => results.find((property) => property.id === selectedId) ?? null, [results, selectedId]);
   const openSavedHome = (id: string) => { setSelectedId(id); setSavedOpen(false); document.getElementById("discover")?.scrollIntoView(); };
 
@@ -79,7 +86,7 @@ export function App() {
         </section>
 
         <FilterBar filters={filters} neighbourhoods={neighbourhoods} resultCount={results.length} onChange={setFilters} onReset={() => setFilters(defaultFilters)} />
-        <SearchActions filters={filters} savedIds={saved.ids} notice={actionNotice} onNotice={setActionNotice} />
+        <SearchActions filters={filters} savedIds={saved.ids} notice={actionNotice} onNotice={setActionNotice} onRestore={setFilters} />
 
         <section className={`discovery-layout view-${view}`}>
           <div className="results-panel">
