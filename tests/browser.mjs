@@ -8,7 +8,7 @@ const expect = (condition, message) => { if (!condition) throw new Error(message
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 50; attempt += 1) {
-    try { const response = await fetch(baseURL); if (response.ok) return; } catch { /* cloud preview is still starting */ }
+    try { const response = await fetch(baseURL); if (response.ok) return; } catch { /* preview server is still starting */ }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
   throw new Error("Production preview did not become ready");
